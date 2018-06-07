@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+ <head>
+   <title>Processing.js Test</title>
+   <script src="processing.js"></script>
+ </head>
+ <body>
+   <h1>Processing.js Test</h1>
+   <p>This is a Processing.js web-based sketch:</p>
+   <p><canvas id="canvas1" width="750" height="550"></canvas></p>
+ 
+	<script id="script1" type="text/javascript">
+	
+	function sketchProc(processing) {
+		
+		let screenWidth = 750;
+		let screenHeight = 550;
+		let ballArr = [];
+		
+		processing.setup = function() {
+			
+			processing.size(screenWidth, screenHeight);
+			
+			processing.noStroke();
+			processing.smooth();
+			
+			for(let i = 0; i < getRandomInt(5, 20); i++) {
+			
+				ballArr.push({diameter: 0, color: [0,0,0], posX: getRandomInt(100, 450), posY: getRandomInt(35, 175), speedY: 0.5, speedX: getRandomInt(-3, 3), acceleration: 0.02});
+				ballArr[i].diameter = getRandomInt(30, 70);
+				ballArr[i].color[0] = getRandomInt(160, 255);
+				ballArr[i].color[1] = getRandomInt(160, 255);
+				ballArr[i].color[2] = getRandomInt(160, 255);
+			}	
+			
+		}
+		
+		processing.draw = function() {
+			
+			processing.background(60, 60 , 60);
+			
+			for(let i = 0; i < ballArr.length; i++) {
+			
+				processing.fill(ballArr[i].color[0], ballArr[i].color[1], ballArr[i].color[2]);
+				processing.ellipse(ballArr[i].posX, ballArr[i].posY, ballArr[i].diameter, ballArr[i].diameter);
+				moveBall(ballArr[i]);
+			}
+			
+		}
+		
+		function getRandomInt(min, max) {
+		
+			return Math.floor(Math.random() * (max - min) ) + min;
+		}
+		
+		function moveBall(ball) {
+			
+			ball.posY += ball.speedY;
+			ball.posX += ball.speedX;
+			ball.speedY += ball.acceleration;
+			
+			if(ball.posY > screenHeight - ball.diameter / 2) {
+			
+				ball.posY = screenHeight - ball.diameter / 2;
+				ball.speedY = ball.speedY * -0.9;
+			}
+			
+			if(ball.posX > screenWidth - ball.diameter / 2) {
+			
+				ball.posX = screenWidth - ball.diameter / 2;
+				ball.speedX = ball.speedX * -1;
+			}
+			
+			if(ball.posX < ball.diameter / 2) {
+			
+				ball.posX = ball.diameter / 2;
+				ball.speedX = ball.speedX * -1;
+			}
+		}
+	
+	}
+	
+	let canvas = document.getElementById("canvas1");
+	// attaching the sketchProc function to the canvas
+	let p = new Processing(canvas, sketchProc);
+	
+	</script>
+ </body>
+ </html>
